@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tic-tac-toe game for fimple practicum</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      section {
+        text-align: center;
+      }
+      .game-container {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        width: 306px;
+        margin: 50px auto;
+      }
+
+      .cell {
+        width: 100px;
+        height: 100px;
+        box-shadow: 0 0 0 1px #333333;
+        border: 1px solid #333333;
+        cursor: pointer;
+        line-height: 100px;
+        font-size: 60px;
+      }
+      .cell:hover{
+        background-color:beige;
+      }
+      .game-restart{
+
+        background-color: bisque;
+        border:none;
+        width:200px;
+        padding:10px;
+        color:brown;
+        font-weight: bold;
+
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <h1 class="game-title">Tic Tac Toe</h1>
+      
+      <div class="game-container">
+          <div class="cell" data-cell="0"></div>
+          <div class="cell" data-cell="1"></div>
+          <div class="cell" data-cell="2"></div>
+          <div class="cell" data-cell="3"></div>
+          <div class="cell" data-cell="4"></div>
+          <div class="cell" data-cell="5"></div>
+          <div class="cell" data-cell="6"></div>
+          <div class="cell" data-cell="7"></div>
+          <div class="cell" data-cell="8"></div>
+      </div>
+      <h2 class="turn-message"></h2>
+      <h2 class="game-status"></h2>
+      <button class="game-restart">Restart Game</button>
+  </section>
+  </body>
+  <script>
+
+    let turn = "x";
+    let cells = document.querySelectorAll('[data-cell]');
+    let status = document.querySelector('.game-status');
+    let restart = document.querySelector('.game-restart');
+    let turns = document.querySelector('.turn-message');
+    let winner = null;
+    turns.innerHTML = "X's turn";
+    let moves = { x: [], o: [] };
+    const winingCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+    cells.forEach(cell => {
+      
+      cell.addEventListener('click', e => {
+        cell.style.pointerEvents = 'none';
+        if (turn === "x") {
+          cell.innerHTML = "X";
+          cell.style.color = "black";
+          moves.x.push(parseInt(cell.dataset.cell));
+          turn = "o";
+          turns.innerHTML = "O's turn";
+        } else if(turn === "o"){
+          cell.innerHTML = "O";
+          cell.style.color = "black";
+          moves.o.push(parseInt(cell.dataset.cell));
+          turn = "x";
+          turns.innerHTML = "X's turn";
+        
+        }
+        checkWinner();
+      });
+    });
+
+    restart.addEventListener('click', e => {
+      restartGame();
+    });
+
+    function restartGame(){
+      cells.forEach(cell => {
+        cell.innerHTML = "";
+        cell.style.pointerEvents = 'auto';
+      });
+      moves.x = [];
+      moves.o = [];
+      turn = "x";
+      winner = "";
+      status.innerHTML = "";
+      turns.innerHTML = "X's turn";
+    }
+
+    function checkWinner(){
+      winingCombinations.forEach(combination => {
+        console.log(moves.x);
+        if (moves.x.includes(combination[0]) && moves.x.includes(combination[1]) && moves.x.includes(combination[2])) {
+          winner = "X";
+        } else if (moves.o.includes(combination[0]) && moves.o.includes(combination[1]) && moves.o.includes(combination[2])) {
+          winner = "O";
+        }
+      });
+      if (winner) {
+        alert("Game Over " + winner + " won the game");
+        restartGame()
+      } else if (moves.x.length + moves.o.length === 9) {
+        alert("Game Over Draw !");
+        restartGame()
+        
+      }
+    }
+
+
+  </script>
+</html>
